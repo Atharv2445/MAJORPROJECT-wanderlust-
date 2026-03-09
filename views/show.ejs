@@ -1,0 +1,22 @@
+<% layout('/layouts/boilerplate') -%>
+<body>
+    <h2>Listing details:</h2>
+     <ul>
+      
+
+            <li>  <%=listingDetail.title%>  </li>  
+             <li>  <%=listingDetail.description%>  </li>     
+            <li>  <%=listingDetail.image%>  </li>
+            <li> &#8377; <%=listingDetail.price.toLocaleString("en-IN")%></li><!--rupess symbol and (,)added ex-$21,000-->
+            <li>  <%=listingDetail.location%>  </li>
+            <li>  <%=listingDetail.country%>  </li>  
+
+      </ul>
+         <a href="http://localhost:8080/listings">Back</a>
+        <a href="http://localhost:8080/listings/<%=listingDetail._id%>/edit">Edit</a>
+         <form  method="post" action="http://localhost:8080/listings/<%=listingDetail._id%>?_method=DELETE"><button>delete</button></form>
+
+   
+
+    
+</body>
