@@ -1,22 +1,31 @@
 <% layout('/layouts/boilerplate') -%>
-<body>
-    <h2>Listing details:</h2>
-     <ul>
-      
-
-            <li>  <%=listingDetail.title%>  </li>  
-             <li>  <%=listingDetail.description%>  </li>     
-            <li>  <%=listingDetail.image%>  </li>
-            <li> &#8377; <%=listingDetail.price.toLocaleString("en-IN")%></li><!--rupess symbol and (,)added ex-$21,000-->
-            <li>  <%=listingDetail.location%>  </li>
-            <li>  <%=listingDetail.country%>  </li>  
-
-      </ul>
-         <a href="http://localhost:8080/listings">Back</a>
-        <a href="http://localhost:8080/listings/<%=listingDetail._id%>/edit">Edit</a>
-         <form  method="post" action="http://localhost:8080/listings/<%=listingDetail._id%>?_method=DELETE"><button>delete</button></form>
-
+<body><br>
+    <h2 class="offset-3">Listing details:</h2>
+  
    
 
-    
+ <div class="card offset-3" style="width: 40rem;">
+  <img src=" <%=listingDetail.image%>" class="card-img-top" alt="...">
+     <div class="card-body row" >
+        <p class="card-text col-8">
+            <ul>
+            <li> <b> <%=listingDetail.title%> </b> </li>  
+             <li>  <%=listingDetail.description%>  </li>     
+            <li> &#8377; <%=listingDetail.price.toLocaleString("en-IN")%></li><!--rupess symbol and (,)added ex-$21,000-->
+            <li>  <%=listingDetail.location%>  </li>
+            <li>  <%=listingDetail.country%>  </li> </ul>
+        </p>
+
+         <div class="buttons">
+           <button class="btn btn-danger "><a href="http://localhost:8080/listings/<%=listingDetail._id%>/edit" class="listing-link"> Edit details</a></button>
+           <form  method="post" action="http://localhost:8080/listings/<%=listingDetail._id%>?_method=DELETE"><button class="btn btn-dark">Delete</button></form>
+           <button class="btn btn-primary"> <a href="http://localhost:8080/listings" class="listing-link">Back</a></button>
+        
+         </div>
+   
+    </div>
+
+</div>
+
+<br><br>
 </body>
