@@ -1,4 +1,7 @@
 //make the code clean and readable
+
+//main page
+
 const express=require("express");
 const app=express();
 const port=8080;
@@ -12,7 +15,10 @@ let methodOverride = require('method-override');
 app.use(methodOverride('_method'));
 const ejsMate=require("ejs-mate");
 app.engine('ejs',ejsMate);
-app.use(express.static(path.join(__dirname,"/public")))
+app.use(express.static(path.join(__dirname,"/public")));
+const wrapAsync = require('./utils/WrapAsync');
+const ExpressError=require("./utils/ExpressError.js")
+
 
 async function main(){
 
@@ -86,7 +92,7 @@ app.get("/listings/new" ,(req,res)=>{
 
 });
 
-app.post("/listings",async(req,res)=>{
+app.post("/listings",wrapAsync(async(req,res)=>{
 
     let {title,description,image,price,location,country}=req.body;
 
@@ -105,8 +111,7 @@ app.post("/listings",async(req,res)=>{
     await newListing.save();
 
     res.redirect("/listings");
-});
-
+}));
 
 //edit
 
@@ -147,3 +152,39 @@ app.delete("/listings/:id",async(req,res)=>{
     console.log(deleted);
     res.redirect("/listings");
 })
+
+//Error handler for server-side
+
+
+
+        // app.use("listings",(err,req,res,next)=>{
+
+        // throw new ExpressError(404,"you enter wrong value");
+        // next(err);
+        
+
+
+        // });
+// app.use((err,req,res,next)=>{
+
+//      throw new ExpressError(404,"page not found");
+//      next(err);
+     
+
+// });
+
+
+app.use((req,res,next)=>{
+    next(new ExpressError(404,"page not found"));
+    
+
+
+});
+app.use((err,req,res,next)=>{
+    let {statusCode=500 , message="someError"}=err;
+    res.status(statusCode).send(message);
+    
+
+
+});
+

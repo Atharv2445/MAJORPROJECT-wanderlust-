@@ -8,44 +8,51 @@
      <br>
       <h2>Create a new listing</h2>
      <br>
-      <form method="post" action="/listings">
+      <form method="post" action="/listings" novalidate class="needs-validation" ><!--novalidate will stop the default text from borwser and needs validation gives chance to define our custom validation-->
 
         <div> 
 
           <label for="title" class="form-label">Title:</label>
-          <input type="text" name="title" placeholder="enter a title" class="form-control">
+          <input type="text" name="title" placeholder="enter a title" class="form-control" required>
+          <div class="valid-feedback">Title looks good!</div><!--validation-->
            <br>
+         
         </div>
 
         <div>
          <label for="description" class="form-label">Enter a description:</label>
-         <textarea name="description" class="form-control" placeholder="enter a description" class="form-control"></textarea>
+         <textarea name="description" class="form-control" placeholder="enter a description" class="form-control" required></textarea>
+          <div class="invalid-feedback">Please enter a short description</div><!--validation-->
+         
          <br>
         </div> 
 
         <div>
           <label for="image" class="form-label">Image/URL</label>
-          <input type="text" name="image" placeholder="enter a image" class="form-control">
+          <input type="text" name="image" placeholder="enter a image" class="form-control" >
           <br>
          </div>
 
        <div class="row">
            <div class="col-md-4">
             <label for="price" class="form-label"> Price:</label>
-            <input type="number" name="price" placeholder="1200" class="form-control">
+            <input type="text" name="price" placeholder="1200" class="form-control" required>
+            <div class="invalid-feedback">Price should be valid</div><!--validation-->
            <br>
            </div>
       
           <div class="col-md-8">
             <label for="country" class="form-label">Country name:</label>
-           <input type="text" name="country" placeholder="India" class="form-control ">
+           <input type="text" name="country" placeholder="India" class="form-control " required>
+            <div class="invalid-feedback">Country name should be valid</div><!--validation-->
            <br>
           </div>
         </div>
         
         <div>
           <label for="location" class="form-label">location:</label>
-          <input type="text" name="location" placeholder="location" class="form-control">
+          <input type="text" name="location" placeholder="location" class="form-control"required>
+          <div class="invalid-feedback">Please enter the location</div><!--validation-->
           <br>
         </div>
 
