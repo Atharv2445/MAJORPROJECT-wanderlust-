@@ -67,23 +67,23 @@ app.get("/",(req,res)=>{
 // });
 
 //allListings
- app.get("/listings",async (req,res)=>{
+ app.get("/listings",wrapAsync(async (req,res)=>{
    const allListings= await listing.find({});
    res.render("index.ejs",{allListings});
 
 
-});
+}));
 
 //show in detail
 
-app.get("/listing/:id" ,async(req,res)=>{
+app.get("/listing/:id" ,wrapAsync(async(req,res)=>{
     let {id}=req.params;
    const listingDetail= await listing.findById(id);
    res.render("show.ejs",{listingDetail});
    console.log(listingDetail);
 
 
-});
+}));
 
 //create new listings
 app.get("/listings/new" ,(req,res)=>{
@@ -94,6 +94,15 @@ app.get("/listings/new" ,(req,res)=>{
 
 app.post("/listings",wrapAsync(async(req,res)=>{
 
+    // if(!req.body.listing){
+
+    //     throw new ExpressError(400,"send a valid data for listings");//handling errors on server side like from hoppscotch when we directly dealing with the serverside.
+    //     //basically i'm throwing my custome error.
+    // }
+    //note- not using this because it giving error every time
+
+   
+    
     let {title,description,image,price,location,country}=req.body;
 
     const newListing=new listing({
@@ -110,12 +119,14 @@ app.post("/listings",wrapAsync(async(req,res)=>{
 
     await newListing.save();
 
+
     res.redirect("/listings");
 }));
 
 //edit
 
-app.get("/listings/:id/edit",async(req,res)=>{
+app.get("/listings/:id/edit",wrapAsync(async(req,res)=>{
+    
 
     let {id}=req.params;
     const listingDetail= await listing.findById(id);
@@ -123,9 +134,14 @@ app.get("/listings/:id/edit",async(req,res)=>{
 
 
 
-});
+}));
 
-app.patch("/listings/:id",async(req,res)=>{
+app.patch("/listings/:id",wrapAsync(async(req,res)=>{
+    // if(!req.body.listing){
+
+    //     throw new ExpressError(400,"send a valid data for listings");//handling errors on server side like from hoppscotch when we directly dealing with the serverside.
+    //     //basically i'm throwing my custome error.
+    // } //note- not using this because it giving error every time
     
     let {id}=req.params;
     let {title,description,image,price,location,country}=req.body;
@@ -143,15 +159,16 @@ app.patch("/listings/:id",async(req,res)=>{
     res.redirect(`/listing/${id}`);
 
 
-});
+}));
 
-app.delete("/listings/:id",async(req,res)=>{
+app.delete("/listings/:id",wrapAsync(async(req,res)=>{
     let {id}=req.params;
 
     let deleted=await listing.findByIdAndDelete(id);
     console.log(deleted);
     res.redirect("/listings");
-})
+}));
+
 
 //Error handler for server-side
 
@@ -181,7 +198,7 @@ app.use((req,res,next)=>{
 
 });
 app.use((err,req,res,next)=>{
-    let {statusCode=500 , message="someError"}=err;
+    let {statusCode=500 , message="something went wrong!!"}=err;
     res.status(statusCode).send(message);
     
 
