@@ -17,7 +17,22 @@ const ejsMate=require("ejs-mate");
 app.engine('ejs',ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 const wrapAsync = require('./utils/WrapAsync');
-const ExpressError=require("./utils/ExpressError.js")
+const ExpressError=require("./utils/ExpressError.js");
+
+const { listingSchema } = require("./schema.js"); 
+
+
+
+
+const valdiateListing=(req,res,next)=>{//we can write this also directly into create route.but here we created a miidleware.
+    let {error}=listingSchema.validate(req.body);
+     if(error){
+        throw new ExpressError(400,error.message);
+     }else{
+       next();
+     }
+
+}
 
 
 async function main(){
@@ -92,18 +107,20 @@ app.get("/listings/new" ,(req,res)=>{
 
 });
 
-app.post("/listings",wrapAsync(async(req,res)=>{
+app.post("/listings",valdiateListing,wrapAsync(async(req,res)=>{//u can see here valdiateListing middleware that first valdiate and futher work will start.
 
     // if(!req.body.listing){
 
     //     throw new ExpressError(400,"send a valid data for listings");//handling errors on server side like from hoppscotch when we directly dealing with the serverside.
     //     //basically i'm throwing my custome error.
     // }
-    //note- not using this because it giving error every time
+    //but we have used joi for handling server-side error.because every time throwing errors make code bulkey.
 
    
     
     let {title,description,image,price,location,country}=req.body;
+    const result=listingSchema.validate(req.body);
+    console.log(result);
 
     const newListing=new listing({
 
@@ -136,12 +153,13 @@ app.get("/listings/:id/edit",wrapAsync(async(req,res)=>{
 
 }));
 
-app.patch("/listings/:id",wrapAsync(async(req,res)=>{
+app.patch("/listings/:id",valdiateListing,wrapAsync(async(req,res)=>{//u can see here valdiateListing middleware that first valdiate and futher work will start.
     // if(!req.body.listing){
 
     //     throw new ExpressError(400,"send a valid data for listings");//handling errors on server side like from hoppscotch when we directly dealing with the serverside.
     //     //basically i'm throwing my custome error.
-    // } //note- not using this because it giving error every time
+     //but we have used joi for handling server-side error.because every time throwing errors make code bulkey.
+
     
     let {id}=req.params;
     let {title,description,image,price,location,country}=req.body;
