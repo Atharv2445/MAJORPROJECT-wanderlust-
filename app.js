@@ -7,6 +7,7 @@ const app=express();
 const port=8080;
 const mongoose=require("mongoose");
 const listing=require("./models/listing.js");
+const review=require("./models/review.js");
 const path=require("path");
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
@@ -18,12 +19,13 @@ app.engine('ejs',ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 const wrapAsync = require('./utils/WrapAsync');
 const ExpressError=require("./utils/ExpressError.js");
-
-const { listingSchema } = require("./schema.js"); 
-
-
+app.use(express.json()); 
+const { listingSchema , reviewSchema } = require("./schema.js"); 
 
 
+
+
+//validate using joi
 const valdiateListing=(req,res,next)=>{//we can write this also directly into create route.but here we created a miidleware.
     let {error}=listingSchema.validate(req.body);
      if(error){
@@ -33,6 +35,17 @@ const valdiateListing=(req,res,next)=>{//we can write this also directly into cr
      }
 
 }
+
+const valdiateReview=(req,res,next)=>{//we can write this also directly into create route.but here we created a miidleware.
+    let {error}=reviewSchema.validate(req.body);
+     if(error){
+        throw new ExpressError(400,error.message);
+     }else{
+       next();
+     }
+
+}
+
 
 
 async function main(){
@@ -91,7 +104,7 @@ app.get("/",(req,res)=>{
 
 //show in detail
 
-app.get("/listing/:id" ,wrapAsync(async(req,res)=>{
+app.get("/listings/:id" ,wrapAsync(async(req,res)=>{
     let {id}=req.params;
    const listingDetail= await listing.findById(id);
    res.render("show.ejs",{listingDetail});
@@ -174,7 +187,7 @@ app.patch("/listings/:id",valdiateListing,wrapAsync(async(req,res)=>{//u can see
 
     } );
 
-    res.redirect(`/listing/${id}`);
+    res.redirect(`/listings/${id}`);
 
 
 }));
@@ -185,6 +198,25 @@ app.delete("/listings/:id",wrapAsync(async(req,res)=>{
     let deleted=await listing.findByIdAndDelete(id);
     console.log(deleted);
     res.redirect("/listings");
+}));
+
+
+
+//review form submition
+
+app.post("/listings/:id/reviews",valdiateReview ,wrapAsync( async(req,res)=>{
+   let { id } = req.params;
+    let targetListing = await listing.findById(id);
+    const newReview = new review(req.body); 
+     targetListing.reviews.push(newReview);
+
+    await newReview.save();
+    await targetListing.save();
+    
+    res.redirect(`/listings/${id}`);
+
+    
+
 }));
 
 
@@ -223,4 +255,5 @@ app.use((err,req,res,next)=>{
 
 
 });
+
 

@@ -1,19 +1,21 @@
 <% layout('/layouts/boilerplate') -%>
 <body><br>
-    <h2 class="offset-3">Listing details:</h2>
+    <h2 class="offset-3"><b> <%=listingDetail.title%> </b></h2>
   
    
 
  <div class="card offset-3" style="width: 40rem;">
-  <img src=" <%=listingDetail.image%>" class="card-img-top" alt="...">
+     <img src=" <%=listingDetail.image%>" class="card-img-top" alt="...">
      <div class="card-body row" >
         <p class="card-text col-8">
             <ul>
-            <li> <b> <%=listingDetail.title%> </b> </li>  
-             <li>  <%=listingDetail.description%>  </li>     
+           
+            <li>  <%=listingDetail.description%>  </li>     
             <li> &#8377; <%=listingDetail.price.toLocaleString("en-IN")%></li><!--rupess symbol and (,)added ex-$21,000-->
             <li>  <%=listingDetail.location%>  </li>
-            <li>  <%=listingDetail.country%>  </li> </ul>
+            <li>  <%=listingDetail.country%>  </li> 
+        
+        </ul>
         </p>
 
          <div class="buttons">
@@ -25,6 +27,32 @@
    
     </div>
 
+
+    <br>
+    <hr>
+    <div class="mb-3 mt-3">
+        <h4>Leave a review</h4>
+        <form  action="/listings/<%=listingDetail._id%>/reviews" method="post" novalidate class="needs-validation" >
+            <div class="mb-3 mt-3">
+             <label for="rating" class="form-label">Rating</label>
+             <input type="range" min="1" max="5" id="rating" name="review[rating]"  class="form-range"> 
+            </div>
+
+            <div class="mb-3 mt-3">
+              <label for="comment" class="form-label">Comments</label>
+              <textarea  rows="4" cols="24" id="comment" name="review[comment]" class="form-control"  required></textarea>
+              <div class="invalid-feedback">
+                   Please add some comment for a review.
+                </div>
+            </div>
+            
+            <button class="btn btn-outline-dark">Submit</button>
+
+
+
+
+        </form>
+    </div>
 </div>
 
 <br><br>
