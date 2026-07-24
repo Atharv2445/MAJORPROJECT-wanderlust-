@@ -106,7 +106,7 @@ app.get("/",(req,res)=>{
 
 app.get("/listings/:id" ,wrapAsync(async(req,res)=>{
     let {id}=req.params;
-   const listingDetail= await listing.findById(id);
+   const listingDetail= await listing.findById(id).populate("reviews");
    res.render("show.ejs",{listingDetail});
    console.log(listingDetail);
 
@@ -114,7 +114,7 @@ app.get("/listings/:id" ,wrapAsync(async(req,res)=>{
 }));
 
 //create new listings
-app.get("/listings/new" ,(req,res)=>{
+app.get("/listing/new" ,(req,res)=>{
 
     res.render("new.ejs");
 
@@ -207,12 +207,12 @@ app.delete("/listings/:id",wrapAsync(async(req,res)=>{
 app.post("/listings/:id/reviews",valdiateReview ,wrapAsync( async(req,res)=>{
    let { id } = req.params;
     let targetListing = await listing.findById(id);
-    const newReview = new review(req.body); 
+    const newReview = new review(req.body.review); 
      targetListing.reviews.push(newReview);
 
     await newReview.save();
     await targetListing.save();
-    
+   
     res.redirect(`/listings/${id}`);
 
     

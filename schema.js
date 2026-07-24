@@ -19,11 +19,17 @@ const review = require('./models/review');
 
 
 
-module.exports.reviewSchema=Joi.object({
-
-     rating:Joi.number().required().min(1).max(5),
-     comment:Joi.string().required()
-
+//module.exports.reviewSchema=Joi.object({
+//
+    // rating:Joi.number().required().min(1).max(5),
+     //comment:Joi.string().required()
+// i changed this because of rating error in show ejs i have written like review[rating]. u can change there or here . so i change joi by adding the tahe nested review.
  
 
-}).required()
+//}).required()
+module.exports.reviewSchema = Joi.object({
+    review: Joi.object({
+        rating: Joi.number().required().min(1).max(5),
+        comment: Joi.string().required()
+    }).required() 
+});
