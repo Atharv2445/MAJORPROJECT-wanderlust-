@@ -54,20 +54,21 @@
         </form>
     </div>
     <hr>
-    <h4>All Reviews</h4>
+    <p><b>All Reviews</b></p>
     
-    <%for(review of listingDetail.reviews){%>
+    <div class="row ">
+      <%for(review of listingDetail.reviews){%>
           
-        <div class="card col-8 mb-3" style="width: 18rem;">
-            <div class="card-body">
-             <p class="card-text"><%=  review.comment %></p> 
-             <p class="card-text"><%= review.rating %> Stars</p>
+        <div class="card col-5 ms-3 mb-3 " style="width: 18rem;">
+            <div class="card-body ">
+              <p class="card-text"><%=  review.comment %></p> 
+              <p class="card-text"><%= review.rating %> Stars</p>
             </div>
-        
+          <form action="/listings/<%=listingDetail._id%>/reviews/<%=review._id%>" method="post"><button class="btn btn-sm btn-dark mb-2">Delete</button></form>
         </div>
 
         <%}%>
-    
+    </div>
 </div>
 
 <br><br>
