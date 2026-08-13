@@ -79,6 +79,7 @@ router.post("/",valdiateListing,wrapAsync(async(req,res)=>{//u can see here vald
     });
 
     await newListing.save();
+    req.flash("success","New Listing Created!")
 
 
     res.redirect("/listings");
