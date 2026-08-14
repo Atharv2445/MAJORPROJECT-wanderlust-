@@ -42,7 +42,12 @@ router.get("/new" ,(req,res)=>{
 
 router.get("/:id" ,wrapAsync(async(req,res)=>{
     let {id}=req.params;
+    
    const listingDetail= await listing.findById(id).populate("reviews");
+     if(!listingDetail){
+         req.flash("error","Listing is requested for does not exists!");//error flash-message if listing is deleted someone still try to access.
+         return res.redirect("/listings");
+    }
    res.render("show.ejs",{listingDetail});
    console.log(listingDetail);
 
@@ -68,7 +73,7 @@ router.post("/",valdiateListing,wrapAsync(async(req,res)=>{//u can see here vald
 
     const newListing=new listing({
 
-        title:title,
+          title:title,
           description:description,
           image:image,
           price:price,
@@ -79,7 +84,8 @@ router.post("/",valdiateListing,wrapAsync(async(req,res)=>{//u can see here vald
     });
 
     await newListing.save();
-    req.flash("success","New Listing Created!")
+    req.flash("success","New Listing Created!");
+   
 
 
     res.redirect("/listings");
@@ -92,6 +98,10 @@ router.get("/:id/edit",wrapAsync(async(req,res)=>{
 
     let {id}=req.params;
     const listingDetail= await listing.findById(id);
+      if(!listingDetail){
+         req.flash("error","Listing is requested for does not exists!");//error flash-message if listing is deleted someone still try to access.
+         return res.redirect("/listings");
+    }
     res.render("edit.ejs",{listingDetail});
 
 
@@ -119,6 +129,8 @@ router.patch("/:id",valdiateListing,wrapAsync(async(req,res)=>{//u can see here 
 
     } );
 
+        req.flash("success","Listing Updated!");
+
     res.redirect(`/listings/${id}`);
 
 
@@ -129,6 +141,8 @@ router.delete("/:id",wrapAsync(async(req,res)=>{
 
     let deleted=await listing.findByIdAndDelete(id);
     console.log(deleted);
+     req.flash("success","Listing Deleted!");
+
     res.redirect("/listings");
 }));
 
