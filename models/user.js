@@ -11,6 +11,6 @@ const userSchema=new Schema({
    
     
 });
-User.plugin(passportLocalMongoose.default);//it is automatically add the hashing salting features.
+userSchema.plugin(passportLocalMongoose.default);//it is automatically add the hashing salting features.
 
 module.exports=mongoose.model("User",userSchema);

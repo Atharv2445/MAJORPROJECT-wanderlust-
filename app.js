@@ -8,8 +8,9 @@ const port=8080;
 const mongoose=require("mongoose");
 
 const path=require("path");
-const listings=require("./routes/listing.js");
-const reviews=require("./routes/review.js");
+const listingsRouter=require("./routes/listing.js");
+const reviewsRouter=require("./routes/review.js");
+const userRouter=require("./routes/user.js");
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
 app.use(express.urlencoded({extended:true}));
@@ -22,6 +23,9 @@ const ExpressError=require("./utils/ExpressError.js");
 app.use(express.json()); 
 const flash=require("connect-flash");//flash messages.
 const session = require("express-session");
+const passport=require("passport");
+const LocalStrategy=require("passport-local");
+const User=require("./models/user.js");
 
 const sessionOptions=session(
   {
@@ -40,6 +44,34 @@ const sessionOptions=session(
 
 app.use(sessionOptions);
 app.use(flash());
+
+//passport
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+app.get("/demoUser",async(req,res)=>{
+
+  let fakeUser= new User({
+   email:"pappu@gmail.com",
+   username:"pappu_lodu",
+
+
+  });
+
+  let registerdUser=await User.register(fakeUser,"congress@123");//congress is password.
+  res.send(registerdUser);
+
+
+
+});
+
+
+
+
 
 app.use((req,res,next)=>{
   res.locals.success=req.flash("success");
@@ -102,8 +134,9 @@ app.get("/",(req,res)=>{
 
 
 
-app.use("/listings",listings);
-app.use("/listings/:id/reviews",reviews);
+app.use("/listings",listingsRouter);
+app.use("/listings/:id/reviews",reviewsRouter);
+app.use("/",userRouter);
 
 
 
