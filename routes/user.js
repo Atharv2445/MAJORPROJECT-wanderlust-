@@ -48,8 +48,25 @@ router.get("/login",(req,res)=>{
 
 router.post("/login", passport.authenticate('local', { failureRedirect: '/login',failureFlash:true }),
 (req,res)=>{
-  req.flash("success","Welcome back to Wanderlust! You are logged in!")
+  req.flash("success","Welcome back to Wanderlust! You are logged in!   ")
   res.redirect("/listings");
+
+})
+
+
+//logout
+
+router.get("/logout",(req,res)=>{
+req.logOut((err)=>{
+  if (err){
+
+    return next(err);
+  }
+  req.flash("success","you  are logged out!");
+  res.redirect("/listings");
+
+})
+
 
 })
 

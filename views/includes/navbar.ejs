@@ -11,6 +11,16 @@
         <a class="nav-link" href="/listings/new">add new listings</a>
         <a class="nav-link disabled" aria-disabled="true">Disabled</a>
       </div>
+
+       <div class="navbar-nav ms-auto">
+         <%if(!currUser ){%>
+        <a class="nav-link" href="/signup">Sign up</a>
+        <a class="nav-link" href="/login">Login</a>
+         <%}%>
+         <% if(currUser){%>
+        <a class="nav-link" href="/logout">Logout</a>
+         <%}%>
+      </div>
     </div>
   </div>
 </nav>

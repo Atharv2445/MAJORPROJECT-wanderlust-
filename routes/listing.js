@@ -5,6 +5,7 @@ const wrapAsync = require('../utils/WrapAsync');
 const listing=require("../models/listing.js");
 const { listingSchema , reviewSchema } = require("../schema.js"); 
 const ExpressError=require("../utils/ExpressError.js");
+const {isLoggedIn}=require("../middleware.js");
 
 
 
@@ -32,7 +33,7 @@ const valdiateListing=(req,res,next)=>{//we can write this also directly into cr
 }));
 
 //create new listings
-router.get("/new" ,(req,res)=>{
+router.get("/new" ,isLoggedIn,(req,res)=>{
 
     res.render("new.ejs");
 
@@ -93,7 +94,7 @@ router.post("/",valdiateListing,wrapAsync(async(req,res)=>{//u can see here vald
 
 //edit
 
-router.get("/:id/edit",wrapAsync(async(req,res)=>{
+router.get("/:id/edit",isLoggedIn,wrapAsync(async(req,res)=>{
     
 
     let {id}=req.params;
@@ -136,7 +137,7 @@ router.patch("/:id",valdiateListing,wrapAsync(async(req,res)=>{//u can see here 
 
 }));
 
-router.delete("/:id",wrapAsync(async(req,res)=>{
+router.delete("/:id",isLoggedIn,wrapAsync(async(req,res)=>{
     let {id}=req.params;
 
     let deleted=await listing.findByIdAndDelete(id);
