@@ -5,6 +5,7 @@ const router=express.Router();
 const User=require("../models/user.js");
 const WrapAsync = require('../utils/WrapAsync.js');
 const passport=require("passport");
+const { saveRedirectUrl } = require('../middleware.js');
 //sign-up page
 router.get("/signup",(req,res)=>{
 res.render("users/signup.ejs");
@@ -24,9 +25,17 @@ router.post("/signup",WrapAsync(async(req,res)=>{
     );
 
    const registeredUser= await User.register(newUser,password);
-   req.flash("success","Welcome To wandurlust!")
-   res.redirect("/listings");
-   console.log("registerdUser");
+   console.log(registeredUser);
+   req.login(registeredUser,(err)=>{
+    if(err){
+
+      return next(err);
+       
+    }
+      req.flash("success","Welcome To wandurlust!")
+      res.redirect("/listings");
+
+   })
 } catch(err){
     
     req.flash("error",err.message);
@@ -46,10 +55,11 @@ router.get("/login",(req,res)=>{
 
 });
 
-router.post("/login", passport.authenticate('local', { failureRedirect: '/login',failureFlash:true }),
+router.post("/login",saveRedirectUrl, passport.authenticate('local', { failureRedirect: '/login',failureFlash:true }),
 (req,res)=>{
-  req.flash("success","Welcome back to Wanderlust! You are logged in!   ")
-  res.redirect("/listings");
+  req.flash("success","Welcome back to Wanderlust! You are logged in! ");
+  let redirectUrl=res.locals.redirectUrl || "/listings";
+  res.redirect(redirectUrl);
 
 })
 
