@@ -44,7 +44,7 @@ router.get("/new" ,isLoggedIn,(req,res)=>{
 router.get("/:id" ,wrapAsync(async(req,res)=>{
     let {id}=req.params;
     
-   const listingDetail= await listing.findById(id).populate("reviews");
+   const listingDetail= await listing.findById(id).populate("reviews").populate("owner");
      if(!listingDetail){
          req.flash("error","Listing is requested for does not exists!");//error flash-message if listing is deleted someone still try to access.
          return res.redirect("/listings");
@@ -84,6 +84,7 @@ router.post("/",valdiateListing,wrapAsync(async(req,res)=>{//u can see here vald
 
     });
 
+   newListing.owner=req.user._id;
     await newListing.save();
     req.flash("success","New Listing Created!");
    

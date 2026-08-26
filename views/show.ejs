@@ -8,8 +8,8 @@
      <img src=" <%=listingDetail.image%>" class="card-img-top" alt="...">
      <div class="card-body row" >
         <p class="card-text col-8">
+          <i> ~Owned by <%=listingDetail.owner.username %>    </i>
             <ul>
-           
             <li>  <%=listingDetail.description%>  </li>     
             <li> &#8377; <%=listingDetail.price.toLocaleString("en-IN")%></li><!--rupess symbol and (,)added ex-$21,000-->
             <li>  <%=listingDetail.location%>  </li>
