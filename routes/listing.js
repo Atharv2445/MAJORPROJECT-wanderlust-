@@ -5,7 +5,8 @@ const wrapAsync = require('../utils/WrapAsync');
 const listing=require("../models/listing.js");
 const { listingSchema , reviewSchema } = require("../schema.js"); 
 const ExpressError=require("../utils/ExpressError.js");
-const {isLoggedIn}=require("../middleware.js");
+const {isLoggedIn,isOwner}=require("../middleware.js");
+
 
 
 
@@ -95,7 +96,7 @@ router.post("/",valdiateListing,wrapAsync(async(req,res)=>{//u can see here vald
 
 //edit
 
-router.get("/:id/edit",isLoggedIn,wrapAsync(async(req,res)=>{
+router.get("/:id/edit",isLoggedIn,isOwner,wrapAsync(async(req,res)=>{
     
 
     let {id}=req.params;
@@ -110,7 +111,7 @@ router.get("/:id/edit",isLoggedIn,wrapAsync(async(req,res)=>{
 
 }));
 
-router.patch("/:id",valdiateListing,wrapAsync(async(req,res)=>{//u can see here valdiateListing middleware that first valdiate and futher work will start.
+router.patch("/:id",valdiateListing,isOwner,wrapAsync(async(req,res)=>{//u can see here valdiateListing middleware that first valdiate and futher work will start.
     // if(!req.body.listing){
 
     //     throw new ExpressError(400,"send a valid data for listings");//handling errors on server side like from hoppscotch when we directly dealing with the serverside.
@@ -119,8 +120,11 @@ router.patch("/:id",valdiateListing,wrapAsync(async(req,res)=>{//u can see here 
 
     
     let {id}=req.params;
-    let {title,description,image,price,location,country}=req.body;
-    const updated=await listing.findByIdAndUpdate(id,{
+
+    
+    
+           let {title,description,image,price,location,country}=req.body;
+          const updated=await listing.findByIdAndUpdate(id,{
 
         title:title,
         description:description,
@@ -129,7 +133,8 @@ router.patch("/:id",valdiateListing,wrapAsync(async(req,res)=>{//u can see here 
         location:location,
         country:country,
 
-    } );
+    } );         
+
 
         req.flash("success","Listing Updated!");
 
@@ -138,7 +143,7 @@ router.patch("/:id",valdiateListing,wrapAsync(async(req,res)=>{//u can see here 
 
 }));
 
-router.delete("/:id",isLoggedIn,wrapAsync(async(req,res)=>{
+router.delete("/:id",isLoggedIn,isOwner,wrapAsync(async(req,res)=>{
     let {id}=req.params;
 
     let deleted=await listing.findByIdAndDelete(id);
