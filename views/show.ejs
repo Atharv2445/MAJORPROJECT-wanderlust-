@@ -33,6 +33,7 @@
     <br>
     <hr>
     <div class="mb-3 mt-3">
+      <%if(currUser) {%>
         <h4>Leave a review</h4>
         <form  action="/listings/<%=listingDetail._id%>/reviews" method="POST" novalidate class="needs-validation" >
             <div class="mb-3 mt-3">
@@ -49,13 +50,11 @@
             </div>
             
             <button class="btn btn-outline-dark">Submit</button>
-
-
-
-
         </form>
-    </div>
+         </div>
     <hr>
+    <%}%>
+    
     <p><b>All Reviews</b></p>
     
     <div class="row ">

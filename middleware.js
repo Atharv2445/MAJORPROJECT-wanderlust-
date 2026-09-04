@@ -1,4 +1,6 @@
 const listing=require("./models/listing.js");
+const { listingSchema , reviewSchema } = require("./schema.js");
+const ExpressError=require("./utils/ExpressError.js");
 
 
 
@@ -38,4 +40,27 @@ module.exports.isOwner=async(req,res,next)=>{
          }
 
          next();
+}
+
+//validate using joi
+module.exports.valdiateListing=(req,res,next)=>{//we can write this also directly into create route.but here we created a miidleware.
+    let {error}=listingSchema.validate(req.body);
+     if(error){
+        throw new ExpressError(400,error.message);
+     }else{
+       next();
+     }
+
+}
+
+
+//validate using joi
+module.exports.validateReview=(req,res,next)=>{//we can write this also directly into create route.but here we created a miidleware.
+    let {error}=reviewSchema.validate(req.body);
+     if(error){
+        throw new ExpressError(400,error.message);
+     }else{
+       next();
+     }
+
 }

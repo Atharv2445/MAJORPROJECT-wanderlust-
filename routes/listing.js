@@ -3,23 +3,13 @@ const express= require('express');
 const router=express.Router();
 const wrapAsync = require('../utils/WrapAsync');
 const listing=require("../models/listing.js");
-const { listingSchema , reviewSchema } = require("../schema.js"); 
-const ExpressError=require("../utils/ExpressError.js");
-const {isLoggedIn,isOwner}=require("../middleware.js");
+const { listingSchema } = require("../schema.js"); 
+
+const {isLoggedIn,isOwner,valdiateListing}=require("../middleware.js");
 
 
 
 
-//validate using joi
-const valdiateListing=(req,res,next)=>{//we can write this also directly into create route.but here we created a miidleware.
-    let {error}=listingSchema.validate(req.body);
-     if(error){
-        throw new ExpressError(400,error.message);
-     }else{
-       next();
-     }
-
-}
 
 
 
